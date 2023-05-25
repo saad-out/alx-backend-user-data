@@ -5,7 +5,10 @@ obfuscated
 """
 import re
 import logging
-from typing import List
+from typing import List, Tuple
+
+
+PII_FIELDS: Tuple = ("email", "ssn", "password", "ip", "phone")
 
 
 def filter_datum(fields: List[str],
@@ -54,3 +57,13 @@ class RedactingFormatter(logging.Formatter):
                                   record.msg,
                                   self.SEPARATOR)
         return super().format(record)
+
+
+def get_logger() -> logging.Logger:
+    """
+    """
+    logger_obj: logging.Logger = logging.getLogger(name="user_data")
+    logger_obj.setLevel(logging.INFO)
+    handler: logging.StreamHandler = logging.StreamHandler()
+    logger_obj.addHandler(handler.setFormatter(RedactingFormatter))
+    return logger_obj
