@@ -3,9 +3,11 @@
 This module contains the function filter_datum which returns the log message
 obfuscated
 """
+import os
 import re
 import logging
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+from mysql.connector.connection import MySQLConnection
 
 
 PII_FIELDS: Tuple = ("email", "ssn", "password", "ip", "phone")
@@ -66,8 +68,21 @@ def get_logger() -> logging.Logger:
     logger_obj: logging.Logger = logging.getLogger(name="user_data")
     logger_obj.setLevel(logging.INFO)
     logger_obj.propagate = False
-    # formatter: RedactingFormatter = RedactingFormatter(list(PII_FIELDS))
     handler: logging.StreamHandler = logging.StreamHandler()
     handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger_obj.addHandler(handler)
     return logger_obj
+
+
+def get_db() -> MySQLConnection:
+    """
+    Connect to MySQL database
+    """
+    user: str = os.environ.get("PERSONAL_DATA_DB_USERNAME", "root")
+    password: str = os.environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    host: str = os.environ.get("PERSONAL_DATA_DB_HOST", "localhost")
+    database: Optional[str] = os.environ.get("PERSONAL_DATA_DB_NAME")
+    return MySQLConnection(user=user,
+                           password=password,
+                           host=host,
+                           database=database)
