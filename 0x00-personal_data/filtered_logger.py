@@ -66,8 +66,8 @@ def get_logger() -> logging.Logger:
     logger_obj: logging.Logger = logging.getLogger(name="user_data")
     logger_obj.setLevel(logging.INFO)
     logger_obj.propagate = False
-    formatter: RedactingFormatter = RedactingFormatter(list(PII_FIELDS))
+    # formatter: RedactingFormatter = RedactingFormatter(list(PII_FIELDS))
     handler: logging.StreamHandler = logging.StreamHandler()
-    handler.setFormatter(formatter)
+    handler.setFormatter(RedactingFormatter)
     logger_obj.addHandler(handler)
     return logger_obj
