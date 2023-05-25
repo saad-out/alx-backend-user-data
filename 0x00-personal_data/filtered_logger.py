@@ -6,7 +6,6 @@ obfuscated
 import re
 import logging
 from typing import List, Tuple
-from parameterized import parameterized_class
 
 
 PII_FIELDS: Tuple = ("email", "ssn", "password", "ip", "phone")
@@ -34,7 +33,6 @@ def filter_datum(fields: List[str],
     return message
 
 
-@parameterized_class(("fields"), [(list(PII_FIELDS))])
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
     """
@@ -70,6 +68,6 @@ def get_logger() -> logging.Logger:
     logger_obj.propagate = False
     # formatter: RedactingFormatter = RedactingFormatter(list(PII_FIELDS))
     handler: logging.StreamHandler = logging.StreamHandler()
-    handler.setFormatter(RedactingFormatter)
+    handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger_obj.addHandler(handler)
     return logger_obj
