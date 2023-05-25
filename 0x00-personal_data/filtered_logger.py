@@ -86,3 +86,22 @@ def get_db() -> MySQLConnection:
                            password=password,
                            host=host,
                            database=database)
+
+
+def main() -> None:
+    """Main entry"""
+    db: MySQLConnection = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    logger: logging.Logger = get_logger()
+    MESSAGE: str = "name={}; email={}; phone={}; ssn={}; password={}; ip={}; \
+                    last_login={}; user_agent={};"
+    for row in cursor:
+        logger.info(MESSAGE.format(row[0], row[1], row[2], row[3], row[4],
+                                   row[5], row[6], row[7]))
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
