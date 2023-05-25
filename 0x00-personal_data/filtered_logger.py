@@ -10,7 +10,7 @@ from typing import List, Tuple, Optional
 from mysql.connector.connection import MySQLConnection
 
 
-PII_FIELDS: Tuple = ("email", "ssn", "password", "ip", "phone")
+PII_FIELDS: Tuple = ("email", "ssn", "password", "name", "phone")
 
 
 def filter_datum(fields: List[str],
