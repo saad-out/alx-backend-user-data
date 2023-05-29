@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ Module of class Auth to manage the API authentication.
 """
+import base64
+
 from api.v1.auth.auth import Auth
 
 
@@ -24,3 +26,22 @@ class BasicAuth(Auth):
             return None
 
         return authorization_header[len(AUTH_SCHEME):]
+
+    def decode_base64_authorization_header(self,
+                                           base64_authorization_header: str
+                                           ) -> str:
+        """ Method to decode the base64 authorization header.
+        """
+        if base64_authorization_header is None:
+            return None
+        try:
+            assert type(base64_authorization_header) == str
+        except AssertionError:
+            return None
+
+        try:
+            byte_auth = bytes(base64_authorization_header, "utf-8")
+            data = base64.b64decode(byte_auth)
+        except Exception:
+            return None
+        return data.decode("utf-8")
