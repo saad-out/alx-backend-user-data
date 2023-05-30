@@ -2,8 +2,10 @@
 """ Module of class Auth to manage the API authentication.
 """
 import base64
+from typing import TypeVar
 
 from api.v1.auth.auth import Auth
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -59,3 +61,23 @@ class BasicAuth(Auth):
             return None, None
 
         return tuple(decoded_base64_authorization_header.split(":"))
+
+    def user_object_from_credentials(self,
+                                     user_email: str,
+                                     user_pwd: str
+                                     ) -> TypeVar('User'):
+        """ Method to get the user object from the credentials.
+        """
+        try:
+            assert type(user_email) == str and user_email is not None
+            assert type(user_pwd) == str and user_pwd is not None
+        except AssertionError:
+            return None
+
+        users = User.search({"email": user_email})
+        if users == []:
+            return None
+        user = users[0]
+        if user.is_valid_password(user_pwd):
+            return user
+        return None
