@@ -20,7 +20,13 @@ class Auth:
             return True
 
         path = path + "/" if path[-1] != "/" else path
-        return not (path in excluded_paths)
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith("*"):
+                if path.startswith(excluded_path[:-1]):
+                    return False
+            elif excluded_path == path:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """ Method to get the authorization header.
