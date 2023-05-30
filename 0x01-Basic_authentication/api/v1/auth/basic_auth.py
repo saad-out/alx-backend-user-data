@@ -60,7 +60,14 @@ class BasicAuth(Auth):
         except AssertionError:
             return None, None
 
-        return tuple(decoded_base64_authorization_header.split(":"))
+        email = password = ""
+        for i in range(len(decoded_base64_authorization_header)):
+            if decoded_base64_authorization_header[i] == ":":
+                email = decoded_base64_authorization_header[:i]
+                if (i + 1) < len(decoded_base64_authorization_header):
+                    password = decoded_base64_authorization_header[i + 1:]
+                break
+        return email, password
 
     def user_object_from_credentials(self,
                                      user_email: str,
