@@ -35,8 +35,11 @@ def filter_request():
     if auth.require_auth(request.path, excluded):
         if not auth.authorization_header(request):
             abort(401)
-        elif not auth.current_user(request):
+        user = auth.current_user(request)
+        if not user:
             abort(403)
+        else:
+            request.current_user = user
 
 
 @app.errorhandler(404)
