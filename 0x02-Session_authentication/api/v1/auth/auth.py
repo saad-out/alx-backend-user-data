@@ -6,6 +6,7 @@ from typing import (
     List,
     TypeVar
 )
+from os import environ
 
 
 class Auth:
@@ -40,3 +41,12 @@ class Auth:
         """ Method to get the current user.
         """
         return None
+
+    def session_cookie(self, request=None):
+        """ returns a cookie value from a request
+        """
+        if request is None:
+            return None
+
+        cookie_name = environ.get("SESSION_NAME", "")
+        return request.cookies.get(cookie_name)
