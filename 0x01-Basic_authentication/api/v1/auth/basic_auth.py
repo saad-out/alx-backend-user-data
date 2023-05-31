@@ -81,7 +81,10 @@ class BasicAuth(Auth):
         except AssertionError:
             return None
 
-        users = User.search({"email": user_email})
+        try:
+            users = User.search({"email": user_email})
+        except KeyError:
+            return None
         if (type(users) != list) or (len(users) != 1):
             return None
         user = users[0]
