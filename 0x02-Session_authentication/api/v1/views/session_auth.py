@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Module of session_auth views
 """
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from api.v1.views import app_views
 from models.user import User
 from os import environ
@@ -33,3 +33,15 @@ def login_user() -> str:
     response = jsonify(user.to_json())
     response.set_cookie(environ.get("SESSION_NAME", "set_cookie"), session_id)
     return response
+
+
+@app_views.route("/auth_session/logout",
+                 methods=["DELETE"],
+                 strict_slashes=False)
+def logout_user() -> str:
+    """ Log out user by destroying session ID
+    """
+    from api.v1.app import auth
+    if not auth.destroy_session(request):
+        abort(404)
+    return jsonify({})
