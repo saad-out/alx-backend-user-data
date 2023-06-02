@@ -21,7 +21,7 @@ def login_user() -> str:
         users = User.search({"email": email})
         assert (type(users) == list) and (len(users) == 1)
     except (KeyError, AssertionError):
-        return jsonify({"error": "no user found for this email"}), 400
+        return jsonify({"error": "no user found for this email"}), 404
     user = users[0]
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
