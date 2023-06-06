@@ -43,15 +43,9 @@ class DB:
         """Returns first User row as per kwargs filters
         """
         user_query = self._session.query(User)
-        filter_conditions = []
         for column, value in kwargs.items():
-            filter_conditions.append(getattr(User, column) == value)
-        print()
-        print(filter_conditions)
-        print()
-        for colum, value in kwargs.items():
-            user_query = user_query.filter_by(colum=value)
-        filtered_user = user_query.first()
-        if filtered_user is None:
+            user_query = user_query.filter_by(**{column: value})
+        user_object = user_query.first()
+        if user_object is None:
             raise NoResultFound
-        return filtered_user
+        return user_object
